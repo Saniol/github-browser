@@ -5,9 +5,12 @@ import List from './List';
 
 export default () => {
     const [users, setUsers] = useState([]);
+    const [search, setSearch] = useState('');
     const listProps = {
         users,
         setUsers,
+        search,
+        setSearch,
     };
 
     return (

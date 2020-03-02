@@ -11,7 +11,7 @@ export default () => (
             Browser
         </h1>
         <nav>
-            <Link to="/list">Users</Link>
+            <Link to="/">Users</Link>
             <Link to="/search">Search</Link>
         </nav>
     </header>

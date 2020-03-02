@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useHistory, Link } from 'react-router-dom';
 import Loader from '../utils/Loader';
 import Error from '../utils/Error';
 import useLoadData from '../utils/useLoadData';
@@ -30,6 +30,12 @@ export default () => {
     useEffect(() => {
         loadData();
     }, [loadData]);
+
+    const history = useHistory();
+    const parentPath = history.location.pathname
+        .split('/')
+        .slice(0, -1)
+        .join('/');
 
     return (
         <>
@@ -83,7 +89,7 @@ export default () => {
             <Loader loading={loading} />
             <Error error={error} />
             <hr />
-            <Link className="back-btn" to="/">Back to list</Link>
+            <Link className="back-btn" to={parentPath}>Back to list</Link>
         </>
     );
 };

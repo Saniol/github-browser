@@ -1,13 +1,13 @@
 import { useState, useCallback } from 'react';
 
-export default ({ updateData, updateMetaData, urlRef }) => {
-    const [loading, setLoading] = useState(true);
+export default ({ updateData, updateMetaData, urlRef, loadingOnInit = true }) => {
+    const [loading, setLoading] = useState(loadingOnInit);
     const [error, setError] = useState(null);
 
     const loadData = useCallback(() => {
         setLoading(true);
 
-        fetch(urlRef.current)
+        return fetch(urlRef.current)
             .then((response) => {
                 if (updateMetaData) {
                     updateMetaData(response);

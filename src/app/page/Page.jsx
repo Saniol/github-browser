@@ -10,7 +10,7 @@ export default () => (
 
         <section>
             <Switch>
-                <Route path="/search" exact>
+                <Route path="/search">
                     <SearchPage />
                 </Route>
                 <Route path="/">

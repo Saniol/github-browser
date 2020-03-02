@@ -6,15 +6,22 @@ const UserRow = ({ user }) => {
     const history = useHistory();
 
     const goToDetails = useCallback(() => {
-        history.push(`${history.location.pathname}/${user.login}`);
+        const currentPath = `${history.location.pathname}`.replace(/\/$/, '');
+        history.push(`${currentPath}/${user.login}`);
     }, [user, history]);
+
+    const stopPropagation = evt => evt.stopPropagation();
 
     return (
         <tr onClick={goToDetails}>
             <td>{user.id}</td>
             <td><img src={user.avatar_url} alt="avatar" /></td>
             <td>{user.login}</td>
-            <td><a href={user.html_url} target="_blank" rel="noreferrer noopener">{user.html_url}</a></td>
+            <td>
+                <a href={user.html_url} target="_blank" rel="noreferrer noopener" onClick={stopPropagation}>
+                    {user.html_url}
+                </a>
+            </td>
         </tr>
     );
 };

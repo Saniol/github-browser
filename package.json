@@ -4,7 +4,7 @@
   "description": "Simple GitHub users browser",
   "main": "src/index.js",
   "scripts": {
-    "build": "echo \"Error: building for production is not ready yet\" && exit 1",
+    "build": "npx webpack --mode=production",
     "start": "npx webpack-dev-server"
   },
   "keywords": [

@@ -1,5 +1,5 @@
 import React, {
-    useState, useEffect, useCallback, useMemo,
+    useRef, useEffect, useCallback, useMemo,
 } from 'react';
 import PropTypes from 'prop-types';
 import parseLinkHeader from '../../helpers/parseLinkHeader';
@@ -13,6 +13,8 @@ const SEARCH_URL = 'https://api.github.com/search/users';
 const UsersList = ({
     users,
     setUsers,
+    search,
+    setSearch,
 }) => {
     const updateData = useCallback((json, setError) => {
         if (!json || !json.items || !Array.isArray(json.items)) {
@@ -22,7 +24,6 @@ const UsersList = ({
         setError(null);
         setUsers(json.items);
     }, [setUsers]);
-    const [search, setSearch] = useState('');
     const urlRef = useMemo(() => ({
         current: `${SEARCH_URL}?q=${encodeURIComponent(search)}`,
     }), [search]);
@@ -34,9 +35,15 @@ const UsersList = ({
     } = useLoadData({
         updateData,
         urlRef,
+        loadingOnInit: false,
     });
+    const preventReloadingOnInit = useRef(true);
 
     useEffect(() => {
+        if (preventReloadingOnInit.current) {
+            preventReloadingOnInit.current = false;
+            return;
+        }
         if (search.length) {
             loadData();
             return;
@@ -71,6 +78,8 @@ UsersList.propTypes = {
         }),
     ).isRequired,
     setUsers: PropTypes.func.isRequired,
+    search: PropTypes.string.isRequired,
+    setSearch: PropTypes.func.isRequired,
 };
 
 export default UsersList;

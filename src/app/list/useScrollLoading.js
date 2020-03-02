@@ -2,17 +2,18 @@ import { useRef, useCallback } from 'react';
 import getScrollToBottom from '../../helpers/getScrollToBottom';
 
 export default ({ loading, loadData }) => {
-    const scrollHandled = useRef(null);
+    const scrollHandled = useRef(false);
 
     const scrollHandler = useCallback(() => {
         const scrollToBottom = getScrollToBottom();
 
-        if (!loading && scrollHandled.current !== scrollToBottom && scrollToBottom < 200) {
-            loadData();
+        if (!loading && !scrollHandled.current && scrollToBottom < 200) {
+            scrollHandled.current = true;
+            loadData()
+                .then(() => {
+                    scrollHandled.current = false;
+                });
         }
-        setTimeout(() => {
-            scrollHandled.current = scrollToBottom;
-        });
     }, [loading, loadData]);
 
     return scrollHandler;
