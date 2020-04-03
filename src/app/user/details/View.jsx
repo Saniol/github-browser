@@ -1,22 +1,22 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, {
+    useState, useEffect, useMemo, useCallback,
+} from 'react';
 import { useParams, useHistory, Link } from 'react-router-dom';
-import Loader from '../utils/Loader';
-import Error from '../utils/Error';
-import useLoadData from '../utils/useLoadData';
+import Loader from '../../utils/Loader';
+import Error from '../../utils/Error';
+import useLoadData from '../../utils/useLoadData';
 
 
 const USERS_URL = 'https://api.github.com/users';
 
-export default () => {
+const useUsers = () => {
     const { login } = useParams();
     const [user, setUser] = useState(null);
 
     const updateData = useCallback((data) => {
         setUser(data);
     }, [setUser]);
-    const urlRef = useMemo(() => ({
-        current: `${USERS_URL}/${login}`,
-    }), [login]);
+    const loadURL = useMemo(() => `${USERS_URL}/${login}`, [login]);
 
     const {
         loadData,
@@ -24,18 +24,37 @@ export default () => {
         error,
     } = useLoadData({
         updateData,
-        urlRef,
     });
 
     useEffect(() => {
-        loadData();
-    }, [loadData]);
+        loadData(loadURL);
+    }, [loadData, loadURL]);
 
+    return {
+        user,
+        loading,
+        error,
+    };
+};
+
+const useParentPath = () => {
     const history = useHistory();
-    const parentPath = history.location.pathname
+    const { location: { pathname } } = history;
+    const parentPath = useMemo(() => pathname
         .split('/')
         .slice(0, -1)
-        .join('/');
+        .join('/'), [pathname]);
+
+    return parentPath;
+};
+
+export default () => {
+    const {
+        user,
+        loading,
+        error,
+    } = useUsers();
+    const parentPath = useParentPath();
 
     return (
         <>

@@ -2,14 +2,14 @@ import React, {
     useEffect, useCallback,
 } from 'react';
 import PropTypes from 'prop-types';
-import parseLinkHeader from '../../helpers/parseLinkHeader';
-import Loader from '../utils/Loader';
-import Error from '../utils/Error';
-import useLoadData from '../utils/useLoadData';
-import useScrollLoading from './useScrollLoading';
-import Table from './Table';
+import parseLinkHeader from '../../../helpers/parseLinkHeader';
+import Loader from '../../utils/Loader';
+import Error from '../../utils/Error';
+import useLoadData from '../../utils/useLoadData';
+import useScrollLoading from '../../utils/useScrollLoading';
+import Table from '../table/Table';
 
-const UsersList = ({
+const useLoadingUsers = ({
     users,
     setUsers,
     nextPageUrl,
@@ -33,16 +33,29 @@ const UsersList = ({
     } = useLoadData({
         updateData,
         updateMetaData,
-        urlRef: nextPageUrl,
     });
-
+    const loadNextPage = useCallback(
+        () => loadData(nextPageUrl.current),
+        [loadData, nextPageUrl],
+    );
     useEffect(() => {
         if (!users.length) {
-            loadData();
+            loadNextPage();
         }
-    }, [users, loadData]);
+    }, [users, loadNextPage]);
 
-    const scrollHandler = useScrollLoading({ loading, loadData });
+    return {
+        loadNextPage,
+        loading,
+        error,
+    };
+};
+
+const useInfiniteScroll = ({
+    loadNextPage,
+    loading,
+}) => {
+    const scrollHandler = useScrollLoading({ loading, loadData: loadNextPage });
 
     useEffect(() => {
         window.addEventListener('scroll', scrollHandler);
@@ -51,6 +64,29 @@ const UsersList = ({
             window.removeEventListener('scroll', scrollHandler);
         };
     }, [scrollHandler]);
+};
+
+const UsersList = ({
+    users,
+    setUsers,
+    nextPageUrl,
+    setNextPageUrl,
+}) => {
+    const {
+        loadNextPage,
+        loading,
+        error,
+    } = useLoadingUsers({
+        users,
+        setUsers,
+        nextPageUrl,
+        setNextPageUrl,
+    });
+
+    useInfiniteScroll({
+        loadNextPage,
+        loading,
+    });
 
     return (
         <>

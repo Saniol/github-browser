@@ -1,8 +1,8 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import Header from '../header/Header';
-import ListPage from '../list/Page';
-import SearchPage from '../search/Page';
+import UsersPage from '../user/Page';
+import SearchPage from '../user/search/Page';
 
 export default () => (
     <>
@@ -14,7 +14,7 @@ export default () => (
                     <SearchPage />
                 </Route>
                 <Route path="/">
-                    <ListPage />
+                    <UsersPage />
                 </Route>
             </Switch>
         </section>

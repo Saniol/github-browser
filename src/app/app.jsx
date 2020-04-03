@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter } from 'react-router-dom';
-import Page from './page/Page';
+import MainPage from './main/Page';
 
 export default (container) => {
     ReactDOM.render((
         <HashRouter>
-            <Page />
+            <MainPage />
         </HashRouter>
     ), container);
 };

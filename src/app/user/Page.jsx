@@ -1,16 +1,28 @@
 import React, { useRef, useState, useCallback } from 'react';
 import { Switch, Route } from 'react-router-dom';
-import View from '../details/View';
-import List from './List';
+import View from './details/View';
+import List from './list/List';
 
 const USERS_URL = 'https://api.github.com/users';
 
-export default () => {
-    const [users, setUsers] = useState([]);
-    const nextPageUrl = useRef(USERS_URL);
+const usePaging = (initURL) => {
+    const nextPageUrl = useRef(initURL);
     const setNextPageUrl = useCallback((url) => {
         nextPageUrl.current = url;
     }, [nextPageUrl]);
+
+    return {
+        nextPageUrl,
+        setNextPageUrl,
+    };
+};
+
+export default () => {
+    const [users, setUsers] = useState([]);
+    const {
+        nextPageUrl,
+        setNextPageUrl,
+    } = usePaging(USERS_URL);
     const listProps = {
         users,
         setUsers,

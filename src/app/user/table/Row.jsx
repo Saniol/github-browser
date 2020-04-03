@@ -2,7 +2,9 @@ import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 
-const UserRow = ({ user }) => {
+const stopPropagation = (evt) => evt.stopPropagation();
+
+const useGoToDetails = (user) => {
     const history = useHistory();
 
     const goToDetails = useCallback(() => {
@@ -10,7 +12,11 @@ const UserRow = ({ user }) => {
         history.push(`${currentPath}/${user.login}`);
     }, [user, history]);
 
-    const stopPropagation = evt => evt.stopPropagation();
+    return goToDetails;
+};
+
+const UserRow = ({ user }) => {
+    const goToDetails = useGoToDetails(user);
 
     return (
         <tr onClick={goToDetails}>
